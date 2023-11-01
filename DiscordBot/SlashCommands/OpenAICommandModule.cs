@@ -14,20 +14,15 @@ namespace MyFirstDiscordBot.SlashCommands
 {
     internal class OpenAICommandModule : ApplicationCommandModule
     {
-        public DiscordBotConfiguration Config { get; set; }
-
-        public OpenAICommandModule(DiscordBotConfiguration config)
-        {
-            Config = config;
-        }
+        public DiscordBot Bot { get; set; } = new DiscordBot();
 
         [SlashCommand("chatgpt", "Send a message to Open Ai, and receive a response!")]
-        public async Task GreetUserCommand(InteractionContext ctx,
+        public async Task ChatGptCommand(InteractionContext ctx,
             [Option("message", "The message you want to send.")] string message)
         {
             await ctx.DeferAsync();
 
-            OpenAIAPI openAIApi = new OpenAIAPI(Config.OpenAiToken);
+            OpenAIAPI openAIApi = new OpenAIAPI(Bot.OpenAiToken);
             Conversation conversation = openAIApi.Chat.CreateConversation();
             conversation.AppendUserInput(message);
             string response = await conversation.GetResponseFromChatbotAsync();
